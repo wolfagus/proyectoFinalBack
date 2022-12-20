@@ -7,4 +7,8 @@ const encryptedData = async (data)=>{
     return await bcrypt.hash(data, salt)
 }
 
-module.exports = {encryptedData};   
+const compareData = async (userData, existData)=>{
+    return await bcrypt.compare(userData, existData)
+}
+
+module.exports = {encryptedData, compareData};   
