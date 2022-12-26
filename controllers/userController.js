@@ -105,7 +105,9 @@ const editUser = async (req, res)=>{
         if (!ObjectId.isValid(id)){
             res.status(400).send('Id invalido');
         }
-        const updateUser = await User.findOneAndUpdate({_id: id}, body, {new: true});
+        const userFound = await User.findById(id);
+        const encrypPassword = await encryptedData(body.password || userFound.password)
+        const updateUser = await User.findOneAndUpdate({_id: id}, {...body, password: encrypPassword}, {new: true});
         if(updateUser){
             return res.status(200).json(updateUser);
         } else {
