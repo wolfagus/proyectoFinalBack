@@ -7,9 +7,11 @@ const userRouter = require('./routes/users')
 const cors = require('cors')
 const dotenv = require('dotenv');
 const app = express();
+const bodyParser = require('body-parser')
 dotenv.config();
 dbConnect();
 
+app.use(bodyParser.urlencoded({extended:false}))
 app.use(logger('dev'));
 app.use(express.json());
 app.use((req, res, next)=>{
