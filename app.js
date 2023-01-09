@@ -4,12 +4,14 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const dbConnect = require('./config/db');
 const userRouter = require('./routes/users')
+const paymentRouter = require('./routes/payments')
 const cors = require('cors')
 const dotenv = require('dotenv');
 const app = express();
+const bodyParser = require('body-parser')
 dotenv.config();
 dbConnect();
-
+app.use(bodyParser.urlencoded({extended:false}))
 app.use(logger('dev'));
 app.use(express.json());
 app.use((req, res, next)=>{
@@ -25,6 +27,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api',userRouter)
+app.use('/api',paymentRouter)
+
 
 
 module.exports = app;
