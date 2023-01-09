@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const jwtOptions = { algorithm: 'HS256', expiresIn: '24h' };
 const token = (payload)=>{
+    // en JWT_SECRET se debe crear un archivo .env y ahi colocar la contraseña s
     return jwt.sign(payload, process.env.JWT_SECRET, jwtOptions);
 }
 

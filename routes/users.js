@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {getAllUsers, createUser,login, deleteUser,getOneUser,editUser} = require('../controllers/userController');
+const {getAllUsers, createUser,login, deleteUser,getOneUser,editUser, activeAccount} = require('../controllers/userController');
 const { isLoggedIn, checkRole } = require('../middleware/auth');
 const {roles} = require('../utils/enum');
 
@@ -11,6 +11,7 @@ router.post('/registerUser',createUser);
 router.post('/login',login);
 router.put('/editUser/:id', isLoggedIn, editUser)
 router.delete('/deleteUser/:id', checkRole(roles.ADMIN), deleteUser);
+router.get('/active-account/:id', activeAccount);
 
 
 module.exports = router;

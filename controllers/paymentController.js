@@ -11,8 +11,8 @@ const pagosMP = async (req,res)=>{
         items: [
           {
 
-            // cuando se envia el req, en el body.items[0].*** en title: es el titulo del producto
-            // en price: es el precio del producto y en quantity: es la cantidad de productos
+            // cuando se envia el req.body en description: es el titulo del producto
+            // en unit_price: es el precio del producto y en quantity: es la cantidad de productos
             title: req.body.description ,
             unit_price: Number(req.body.unit_price) ,
             quantity:Number(req.body.quantity) ,
@@ -29,7 +29,7 @@ const pagosMP = async (req,res)=>{
       
       mercadopago.preferences.create(preference)
         .then((r)=> {
-          // EL r.body.init_pint ES EL LINK QUE DEVUELVE PARA PODER REALIZAR EL PAGO
+          // EL r.body.init_point ES EL LINK QUE DEVUELVE PARA PODER REALIZAR EL PAGO
           res.status(200).json(r.body.init_point)
         })
         .catch((error)=> {
@@ -37,6 +37,9 @@ const pagosMP = async (req,res)=>{
         });
 }
 
+
+// una vez que se realiza el pago se ejecuta de manera automatica un GET de esta funcion que se devuelve
+// el estado de el pago y ademas lo guarda en la base de datos
 const notificacionPago = async (req, res) =>{
     try {
       const {payment_id, status, payment_type } = req.query;
@@ -45,9 +48,7 @@ const notificacionPago = async (req, res) =>{
         status:status,
         payment_type:payment_type
       }
-      const savePayment = await userService.createUser(dataPayment)
-      //const savePayment = new Pagos(dataPayment)
-      //await savePayment.save();
+      const savePayment = await userService.createPayment(dataPayment)
       res.status(200).json(savePayment);
     } catch (error) {
         console.log(error);
