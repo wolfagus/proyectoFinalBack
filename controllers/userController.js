@@ -4,7 +4,11 @@ const {encryptedData, compareData} = require('../utils/bCryptService');
 const { token } = require('../utils/jwtService');
 const { findOneAndUpdate } = require('../models/UserModel');
 const { ObjectId } = require('mongoose').Types;
+const { sendNodeMailer } = require('../services/sendgrid')
 
+
+
+// ESTA OPCION SIRVE PARA TRAER TODOS LOS USUARIOS
 const getAllUsers = async (req, res)=> {
     try{
         const user = await  User.find();
@@ -15,6 +19,8 @@ const getAllUsers = async (req, res)=> {
     }
 }
 
+
+// ESTA OPCION SIRVE PARA TRAER UN SOLO USUARIO POR ID
 const getOneUser = async (req,res)=>{
     const {id} = req.params;
     try {
@@ -32,6 +38,8 @@ const getOneUser = async (req,res)=>{
     }
 }
 
+
+// ESTA OPCION SIRVE PARA CREAR EL USUARIO
 const createUser = async (req,res)=> {
     try{
         const {email, password} = req.body;
@@ -48,6 +56,13 @@ const createUser = async (req,res)=> {
     }
     const newUser = await userService.createUser(saveUser)  
     const activeToken = token({id: newUser._id, role: newUser.role});
+
+    sendNodeMailer ({
+        userEmail:saveUser.email,
+        subject: "Confirmacion de correo electronico",
+        htmlMsg:`<p>${saveUser.name}, por favor haga click en el siguiente enlace para 
+        confirmar su correo electronico. haga</p> <a href=${process.env.APP_BACK_URL}${newUser._id}>click aqui</a>`
+    })
         return res.status(201).json(activeToken)
     } catch(error) {
         console.log(error)
@@ -55,6 +70,10 @@ const createUser = async (req,res)=> {
     }
 }
 
+
+
+// ESTA OPCION SIRVE PARA LOGUEAR EL USUARIO, DEBE ESTAR EN EL MAIL VALIDADO, EN CASO DE QUE ESTE
+// TODO OK, SE DEVUELVE UN TOKEN CON 24 HORAS DE DURACION
 const login = async (req,res)=>{
     try {
         const {email, password}= req.body;
@@ -66,6 +85,9 @@ const login = async (req,res)=>{
         if(!authorizedUser){
             return res.status(400).send('credenciales invalidas')
         }
+        if (!foundUser.isActive) {
+            return res.status(403).json('Not verfied account');
+          }
         const activeToken = token({id: userFound._id, role: userFound.role});
         res.status(200).json(activeToken)
     } catch (error) {
@@ -74,6 +96,8 @@ const login = async (req,res)=>{
     }
 }
 
+
+// ESTA OPCION SIRVE PARA ELIMINAR UN USUARIO CON EL ID
 const deleteUser = async (req,res)=>{
     const { id } = req.params;
     const todayDate = new Date();
@@ -98,6 +122,8 @@ const deleteUser = async (req,res)=>{
     }
 }
 
+
+// ESTA OPCION SIRVE PARA EDITAR UN USUARIO
 const editUser = async (req, res)=>{
     try {
         const {body} = req;
@@ -120,5 +146,24 @@ const editUser = async (req, res)=>{
 }
 
 
+// ESTA OPCION ES PARA QUE SE VERIFIQUE EL MAIL, CAMBIANDO EL isActive a true
+const activeAccount = async (req, res) => {
+    const { id } = req.params;
+    try {
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).json("ID no valido");
+      }
+      const activeUser = await User.findOneAndUpdate({_id: id }, {isActive: true}, { new: true });
+      if (activeUser) {
+        res.status(200).json(activeUser);
+      } else {
+        res.status(404).json("El usuario no existe");
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json('Internal Server Error');
+    }
+  }
 
-module.exports = {getAllUsers, createUser,login, deleteUser,getOneUser, editUser}
+
+module.exports = {getAllUsers, createUser,login, deleteUser,getOneUser, editUser, activeAccount}

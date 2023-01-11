@@ -14,6 +14,10 @@ const productsRouter = require("./routes/products");
 const cors = require("cors");
 const app = express();
 app.use(logger("dev"));
+const paymentRouter = require("./routes/payments");
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(logger("dev"));
 app.use(express.json());
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", process.env.ORIGIN_URL);
@@ -34,6 +38,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/api", userRouter);
-app.use("/products", productsRouter);
+app.use("/api", paymentRouter);
 
 module.exports = app;
