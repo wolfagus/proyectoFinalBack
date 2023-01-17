@@ -5,10 +5,8 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 console.log("primera conexión");
-console.log(process.env.MONGO_CONNECTION_STRING_MENU);
-const dbConnectMenu = mongoose.connect(
-  process.env.MONGO_CONNECTION_STRING_MENU
-);
+const dbConnectMenu = require("./config/db2");
+dbConnectMenu();
 const userRouter = require("./routes/users");
 const productsRouter = require("./routes/products");
 const cors = require("cors");

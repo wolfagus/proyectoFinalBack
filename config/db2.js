@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 const connectDbMenu = () => {
   try {
-    mongoose.createConnection(process.env.MONGO_CONNECTION_STRING_MENU);
+    mongoose.connect(process.env.MONGO_CONNECTION_STRING_MENU);
     console.log("conectado a la base de datos MENU");
   } catch (error) {
     console.log("ERROR DB2: ", error);
