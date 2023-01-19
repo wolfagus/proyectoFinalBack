@@ -5,6 +5,7 @@ const logger = require('morgan');
 const dbConnect = require('./config/db');
 const userRouter = require('./routes/users')
 const paymentRouter = require('./routes/payments')
+const productsRouter = require("./routes/products");
 const cors = require('cors')
 const dotenv = require('dotenv');
 const app = express();
@@ -28,6 +29,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api',userRouter)
 app.use('/api',paymentRouter)
+app.use("/products", productsRouter);
+
 
 
 
