@@ -78,7 +78,7 @@ const login = async (req, res) => {
     if (!authorizedUser) {
       return res.status(400).send("credenciales invalidas");
     }
-    if (!foundUser.isActive) {
+    if (!userFound.isActive) {
       return res.status(403).json("Not verfied account");
     }
     const activeToken = token({ id: userFound._id, role: userFound.role });

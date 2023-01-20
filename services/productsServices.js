@@ -5,7 +5,7 @@ const preoductsService = {
     return await products.find(filter);
   },
   saveProduct: async (product) => {
-    const newProducts = new product(product);
+    const newProducts = new products(product);
     return await newProducts.save();
   },
 };

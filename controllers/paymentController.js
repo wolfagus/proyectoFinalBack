@@ -1,6 +1,7 @@
 const mercadopago = require("mercadopago");
+const dotenv = require('dotenv');
 mercadopago.configure({
-    access_token: "TEST-2765723855854915-122620-e57d7dd3f238667ccf444dda4e6ba8ec-171875479",
+    access_token: process.env.TOKEN_MP,
   });
 
 const Pagos = require('../models/Pagos')
