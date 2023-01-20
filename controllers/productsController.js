@@ -1,15 +1,15 @@
 const { menu } = require("mongoose").Types;
-const { ObjectId } = require("mongoose");
+const { ObjectId } = require("mongoose").Types;
 const { preoductsService } = require("../services/productsServices");
 const products = require("../models/productsModel");
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await preoductsService.find();
+    const products = await preoductsService.findAllProducts();
     res.status(200).json(products);
   } catch (error) {
     console.log(error);
-    res.status(500).Json("internal sever error");
+    res.status(500).json("internal sever error");
   }
 };
 const getOneProduct = async (req, res) => {
@@ -18,25 +18,25 @@ const getOneProduct = async (req, res) => {
     if (!ObjectId.isValid(id)) {
       res.status(404).json("Id not valid");
     }
-    const products = await products.findById(id);
-    if (!products) {
+    const Products = await products.findById(id);
+    if (!Products) {
       res.status(404).json("Id not found");
     } else {
-      res.status(200).json(products);
+      res.status(200).json(Products);
     }
   } catch (error) {
     console.log(error);
-    res.status(500).Json("internal sever error");
+    res.status(500).json("internal sever error");
   }
 };
 const createProduct = async (req, res) => {
   const productsSave = { ...req.body, isActive: true };
   try {
     const newProduct = await preoductsService.saveProduct(productsSave);
-    return res.status(201), Jason(newProduct);
+    return res.status(201).json(newProduct);
   } catch (error) {
     console.log(error);
-    res.status(500).Json("internal sever error");
+    res.status(500).json("internal sever error");
   }
 };
 const updateProduct = async (req, res) => {
@@ -44,9 +44,9 @@ const updateProduct = async (req, res) => {
     const bodyProduct = req.body;
     const id = req.params.id;
     if (!ObjectId.isValid(id)) {
-      return res.status(400).Json("ObjectId is not valid");
+      return res.status(400).json("ObjectId is not valid");
     }
-    const updateProduct = await Product.findOneAndUpdate(
+    const updateProduct = await products.findOneAndUpdate(
       {
         _id: id,
       },
@@ -60,7 +60,7 @@ const updateProduct = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).Json("internal sever error");
+    res.status(500).json("internal sever error");
   }
 };
 const deleteProduct = async (req, res) => {
@@ -72,9 +72,9 @@ const deleteProduct = async (req, res) => {
   };
   try {
     if (!ObjectId.isValid(id)) {
-      return res.status(400).Json("ObjectId is not valid");
+      return res.status(400).json("ObjectId is not valid");
     }
-    const deleteProduct = await Product.findOneAndUpdate(
+    const deleteProduct = await products.findOneAndUpdate(
       {
         _id: id,
       },
@@ -88,7 +88,7 @@ const deleteProduct = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).Json("internal sever error");
+    res.status(500).json("internal sever error");
   }
 };
 
