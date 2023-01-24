@@ -1,0 +1,10 @@
+{
+    "version": 2,
+    "name":"Sabores de casa",
+    "builds":[
+        {"src":"app.js","use":"@vercel/node"}
+    ],
+    "routes":[
+        {"src":"/(.*)","dest":"/app.js"}
+    ]
+}
