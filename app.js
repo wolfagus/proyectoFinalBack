@@ -15,6 +15,7 @@ dbConnect();
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(logger('dev'));
 app.use(express.json());
+app.use(cors({origin: process.env.ORIGIN_URL}));
 app.use((req, res, next)=>{
     /* en ORIGIN_URL se debe crear un archivo .env y colocar la url desde la que se haran las peticiones */
     res.setHeader('Access-Control-Allow-Origin', process.env.ORIGIN_URL);
@@ -23,7 +24,6 @@ app.use((req, res, next)=>{
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 })
-app.use(cors({origin: process.env.ORIGIN_URL}));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
