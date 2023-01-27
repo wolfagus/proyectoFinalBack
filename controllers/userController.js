@@ -82,7 +82,7 @@ const login = async (req, res) => {
       return res.status(403).json("Not verfied account");
     }
     const activeToken = token({ id: userFound._id, role: userFound.role });
-    res.status(200).json(activeToken);
+    res.status(200).json({activeToken, userFound});
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");
