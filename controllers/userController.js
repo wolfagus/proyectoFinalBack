@@ -58,7 +58,7 @@ const createUser = async (req, res) => {
       htmlMsg: `<p>${saveUser.name}, por favor haga click en el siguiente enlace para 
         confirmar su correo electronico. haga</p> <a href=${process.env.APP_BACK_URL}${newUser._id}>click aqui</a>`,
     });
-    return res.status(201).json(activeToken, userFound);
+    return res.status(201).json({activeToken, userFound});
   } catch (error) {
     console.log(error);
     res.status(500).json("Internal Server Error");
