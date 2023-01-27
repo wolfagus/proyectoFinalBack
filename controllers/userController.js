@@ -48,6 +48,7 @@ const createUser = async (req, res) => {
       password: encrypPassword,
       isActive: false,
       isDeleted: false,
+      role: req.body.role || "CLIENT"
     };
     const newUser = await userService.createUser(saveUser);
     const activeToken = token({ id: newUser._id, role: newUser.role });

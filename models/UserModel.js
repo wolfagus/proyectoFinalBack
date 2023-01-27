@@ -8,7 +8,7 @@ const userSchema = new Schema({
     password: {type: String, requird: true},
     address: String,
     province: String,
-    role: {type: String, enum:roles, default: roles.CLIENT},
+    role: {type: String, require: true},
     deleteAt: Date,
     isDeleted: Boolean,
     isActive: Boolean,
