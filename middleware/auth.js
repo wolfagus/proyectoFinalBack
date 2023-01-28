@@ -21,14 +21,14 @@ const isLoggedIn = async (req, res, next)=>{
 
 
 // VERIFICA QUE EL USUARIO ESTE LOGUEADO,  EL TOKEN AUN VIGENTE Y ADEMAS QUE EL ROLE DEL USUARIO SEA ADMIN 
-const checkRole = (role)=>{
+const checkRole = ()=>{
     try {
         return async (req, res, next)=>{
             const token = getToken(req);
             if(!token) {return res.status(401).send('Usuario no autorizado')}
             const tokenDecode = verifiedToken(token);
-            const userFound = await User.findById(tokenDecode.id);
-            if(userFound && userFound.role == role){
+            const userFound = await User.findById(tokenDecode.id)
+            if(userFound && userFound.role == "ADMIN"){
                 next();
             } else {  res.status(401).send('Usuario no autorizado'); }
         }
