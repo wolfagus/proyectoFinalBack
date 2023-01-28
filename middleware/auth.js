@@ -25,10 +25,10 @@ const checkRole = ()=>{
     try {
         return async (req, res, next)=>{
             const token = getToken(req);
-            if(!token) {return res.status(401).send('Usuario no autorizado')}
+            if(!token) {return res.status(400).send('Usuario no autorizado')}
             const tokenDecode = verifiedToken(token);
             const userFound = await User.findById(tokenDecode.id)
-            if(userFound && userFound.role == "ADMIN"){
+            if(userFound.role == "ADMIN"){
                 next();
             } else {  res.status(401).send('Usuario no autorizado'); }
         }
