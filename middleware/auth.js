@@ -24,9 +24,10 @@ const isLoggedIn = async (req, res, next)=>{
 const checkRole = (role)=>{
     try {
         return async (req, res, next)=>{
+            
             const token = getToken(req);
             console.log(token)
-            if(!token) {return res.status(400).send(`error ${token}`)}
+            if(!token) {return res.status(400).send(`error ${req}`)}
             const tokenDecode = verifiedToken(token);
             const userFound = await User.findById(tokenDecode.id)
             if(userFound && userFound.role == role){
