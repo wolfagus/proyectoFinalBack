@@ -25,7 +25,7 @@ const checkRole = (role)=>{
     try {
         return async (req, res, next)=>{
             
-            const token = getToken(req);
+            const token = req;
             console.log(token)
             if(!token) {return res.status(400).send(`error ${req}`)}
             const tokenDecode = verifiedToken(token);
