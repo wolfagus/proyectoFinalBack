@@ -26,7 +26,7 @@ const checkRole = (role)=>{
         return async (req, res, next)=>{
             const token = getToken(req);
             console.log(token)
-            if(!token) {return res.status(400).send(token)}
+            if(!token) {return res.status(400).send(`error ${token}`)}
             const tokenDecode = verifiedToken(token);
             const userFound = await User.findById(tokenDecode.id)
             if(userFound && userFound.role == role){
