@@ -59,7 +59,7 @@ const createUser = async (req, res) => {
       htmlMsg: `<p>${saveUser.name}, por favor haga click en el siguiente enlace para 
         confirmar su correo electronico. haga</p> <a href=${process.env.APP_BACK_URL}${newUser._id}>click aqui</a>`,
     });
-    return res.status(201).json({activeToken, userData: {name: newUser.name, role: newUser.role, isVerified: newUser.isActive}});
+    return res.status(201).json({token: activeToken, userData: {name: newUser.name, role: newUser.role, isVerified: newUser.isActive}});
   } catch (error) {
     console.log(error);
     res.status(500).json("Internal Server Error");
@@ -83,7 +83,7 @@ const login = async (req, res) => {
       return res.status(403).json("Not verfied account");
     }
     const activeToken = token({ id: userFound._id, role: userFound.role });
-    res.status(200).json({activeToken, userData: {name: userFound.name, role: userFound.role, isVerified: userFound.isActive}});
+    res.status(200).json({token: activeToken, userData: {name: userFound.name, role: userFound.role, isVerified: userFound.isActive}});
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");
