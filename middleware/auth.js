@@ -21,7 +21,7 @@ const isLoggedIn = async (req, res, next)=>{
 
 
 // VERIFICA QUE EL USUARIO ESTE LOGUEADO,  EL TOKEN AUN VIGENTE Y ADEMAS QUE EL ROLE DEL USUARIO SEA ADMIN 
-const checkRole = ()=>{
+const checkRole = (role)=>{
     try {
         return async (req, res, next)=>{
             const token = getToken(req);
@@ -29,7 +29,7 @@ const checkRole = ()=>{
             if(!token) {return res.status(400).send(token)}
             const tokenDecode = verifiedToken(token);
             const userFound = await User.findById(tokenDecode.id)
-            if(userFound.role == "ADMIN"){
+            if(userFound && userFound.role == role){
                 next();
             } else {  res.status(401).send('Usuario no autorizado'); }
         }
