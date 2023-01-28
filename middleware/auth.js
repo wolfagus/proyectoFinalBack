@@ -24,12 +24,10 @@ const isLoggedIn = async (req, res, next)=>{
 const checkRole = (role)=>{
     try {
         return async (req, res, next)=>{
-            
-            const token = req;
-            console.log(token)
-            if(!token) {return res.status(400).send(`error ${req}`)}
+            const token = getToken(req);
+            if(!token) {return res.status(401).send('Usuario no autorizado')}
             const tokenDecode = verifiedToken(token);
-            const userFound = await User.findById(tokenDecode.id)
+            const userFound = await User.findById(tokenDecode.id);
             if(userFound && userFound.role == role){
                 next();
             } else {  res.status(401).send('Usuario no autorizado'); }
