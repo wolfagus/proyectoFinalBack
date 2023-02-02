@@ -8,6 +8,9 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
+  createPedido,
+  confirmPedido,
+  getAllPedidos,
 } = require("../controllers/productsController");
 const { create } = require("../models/productsModel");
 
@@ -16,4 +19,8 @@ router.get("/oneProduct/:id", isLoggedIn, getOneProduct);
 router.post("/createproducts", checkRole(roles.ADMIN), createProduct);
 router.put("/editProducts/:id", checkRole(roles.ADMIN), updateProduct);
 router.delete("/deleteProducts/:id", checkRole(roles.ADMIN), deleteProduct);
+router.post("/createPedido", isLoggedIn, createPedido);
+router.post("/confirmPedido", checkRole(roles.ADMIN), confirmPedido);
+router.get("/allPedidos", checkRole(roles.ADMIN), getAllPedidos);
+
 module.exports = router;

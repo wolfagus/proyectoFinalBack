@@ -2,6 +2,52 @@ const { menu } = require("mongoose").Types;
 const { ObjectId } = require("mongoose").Types;
 const { preoductsService } = require("../services/productsServices");
 const products = require("../models/productsModel");
+const { getToken, verifiedToken } = require("../utils/jwtService");
+const User = require("../models/UserModel");
+const pedidos = require("../models/pedidosModel");
+const { sendNodeMailer } = require("../services/sendgrid");
+
+
+const getAllPedidos = async (req, res) => {
+  try {
+    const products = await pedidos.find();
+    res.status(200).json(products);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json("internal sever error");
+  }
+};
+const createPedido = async (req, res) => {
+  try {
+    // console.log(req)
+    const productsSave = req.body;    
+    const token = getToken(req)
+    const user = verifiedToken(token)
+    const userFound = await User.findById(user.id);
+    const newProduct = await preoductsService.savePedidos({...productsSave, email: userFound.email});
+
+    sendNodeMailer({
+      userEmail: userFound.email,
+      subject: "Pago del pedido",
+      htmlMsg: `<p>${userFound.name}, por favor haga click en el siguiente enlace para 
+        hacer el pago de su pedido. haga</p> <a href=${process.env.APP_BACK_URL_PAGOS}${newProduct._id}>click aqui</a>`,
+    })
+    return res.status(201).json(newProduct);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json("internal sever error");
+  }
+}
+const confirmPedido = async (req, res) => {
+  try {
+    const productsSave = { ...req.body, isApproved: true};
+    const newProduct = await preoductsService.savePedidos(productsSave);
+    return res.status(201).json(newProduct);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json("internal sever error");
+  }
+}
 
 const getAllProducts = async (req, res) => {
   try {
@@ -98,4 +144,7 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
+  createPedido,
+  confirmPedido,
+  getAllPedidos
 };
