@@ -1,28 +1,34 @@
 const mercadopago = require("mercadopago");
+const pedidos = require("../models/pedidosModel");
 const dotenv = require('dotenv');
+
 mercadopago.configure({
     access_token: process.env.TOKEN_MP,
   });
 
 const Pagos = require('../models/Pagos')
-const {userService} = require('../services/userServices')
+const {userService} = require('../services/userServices');
+const { sendNodeMailer } = require("../services/sendgrid");
 
 const pagosMP = async (req,res)=>{
+  const  {id}  = req.params;
+  const pedidoId = await pedidos.findById(id)
+  
     const preference = {
         items: [
           {
 
             // cuando se envia el req.body en description: es el titulo del producto
             // en unit_price: es el precio del producto y en quantity: es la cantidad de productos
-            title: req.body.description ,
-            unit_price: Number(req.body.unit_price) ,
-            quantity:Number(req.body.quantity) ,
+            title: pedidoId.title ,
+            unit_price: pedidoId.price ,
+            quantity: 1 ,
           },
         ],
         back_urls: {
-          "success": "http://localhost:4000/api/notificacionPayment",
-          "failure": "http://localhost:4000/api/notificacionPayment",
-          "pending": "http://localhost:4000/api/notificacionPayment"
+          "success": `http://localhost:4000/api/notificacionPayment/${pedidoId.email}`,
+          "failure": `http://localhost:4000/api/notificacionPayment/${pedidoId.email}`,
+          "pending": `http://localhost:4000/api/notificacionPayment/${pedidoId.email}`
         },
         auto_return: "approved",
 
@@ -43,6 +49,13 @@ const pagosMP = async (req,res)=>{
 // el estado de el pago y ademas lo guarda en la base de datos
 const notificacionPago = async (req, res) =>{
     try {
+      const userEmail = req.params
+    
+      sendNodeMailer({
+        userEmail: userEmail.datos,
+        subject: "Notificacion de pago",
+        htmlMsg: `<p> El estado de su pago del pedido es ${req.query.status}</p>`,
+      })
       const {payment_id, status, payment_type } = req.query;
       const dataPayment = {
         payment_id: payment_id,
@@ -50,7 +63,7 @@ const notificacionPago = async (req, res) =>{
         payment_type:payment_type
       }
       const savePayment = await userService.createPayment(dataPayment)
-      res.status(200).json(savePayment);
+      res.status(200).json(savePayment.status);
     } catch (error) {
         console.log(error);
     }
