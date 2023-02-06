@@ -21,14 +21,14 @@ const pagosMP = async (req,res)=>{
             // cuando se envia el req.body en description: es el titulo del producto
             // en unit_price: es el precio del producto y en quantity: es la cantidad de productos
             title: pedidoId.title ,
-            unit_price: pedidoId.price ,
+            unit_price: 6500 /*parseInt(pedidoId.price)*/  ,
             quantity: 1 ,
           },
         ],
         back_urls: {
-          "success": `http://localhost:4000/api/notificacionPayment/${pedidoId.email}`,
-          "failure": `http://localhost:4000/api/notificacionPayment/${pedidoId.email}`,
-          "pending": `http://localhost:4000/api/notificacionPayment/${pedidoId.email}`
+          "success": `https://sabores-de-casa-back.vercel.app/api/notificacionPayment/${pedidoId.email}`,
+          "failure": `https://sabores-de-casa-back.vercel.app/api/notificacionPayment/${pedidoId.email}`,
+          "pending": `https://sabores-de-casa-back.vercel.app/api/notificacionPayment/${pedidoId.email}`
         },
         auto_return: "approved",
 
