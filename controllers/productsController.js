@@ -40,8 +40,11 @@ const createPedido = async (req, res) => {
 }
 const confirmPedido = async (req, res) => {
   try {
-    const productsSave = { ...req.body, isApproved: true};
-    const newProduct = await preoductsService.savePedidos(productsSave);
+    const newProduct = await pedidos.findOneAndUpdate(
+      {_id: req.body._id},
+      { ...req.body, isApproved: true},
+      { new: true }
+    );
     return res.status(201).json(newProduct);
   } catch (error) {
     console.log(error);
