@@ -19,7 +19,7 @@ const sendNodeMailer = async (user) => {
 
 
     const info = await transporter.sendMail({
-      from: '"naturDiet" <agustinmercado1234@gmail.com>', // sender address
+      from: '"MrChef" <agustinmercado1234@gmail.com>', // sender address
       to: user.userEmail, // list of receivers
       subject: user.subject, // Subject line
       html: user.htmlMsg, // html body
