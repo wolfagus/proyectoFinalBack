@@ -3,8 +3,8 @@ const { Schema } = mongoose;
 const {roles} = require('../utils/enum')
 
 const userSchema = new Schema({
-    name: {type: String, requird: true, unique: true},
-    email: {type: String, requird: true},
+    name: {type: String, requird: true},
+    email: {type: String, requird: true, unique: true},
     password: {type: String, requird: true},
     address: String,
     province: String,

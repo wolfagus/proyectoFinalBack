@@ -10,7 +10,7 @@ const sendNodeMailer = async (user) => {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
-      secure: true, // true for 465, false for other ports
+      secure: true,
       auth: {
         user: process.env.EMAIL_SEND, 
         pass: process.env.NODEMAILER_PASS, 
@@ -19,10 +19,10 @@ const sendNodeMailer = async (user) => {
 
 
     const info = await transporter.sendMail({
-      from: '"naturDiet" <agustinmercado1234@gmail.com>', // sender address
-      to: user.userEmail, // list of receivers
-      subject: user.subject, // Subject line
-      html: user.htmlMsg, // html body
+      from: '"Mr Chef" <agustinmercado1234@gmail.com>',
+      to: user.userEmail, 
+      subject: user.subject, 
+      html: user.htmlMsg,
     });
 
   } catch (error) {
